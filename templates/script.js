@@ -1,6 +1,8 @@
 class Graphic {
-  constructor() {
+  constructor(ChartForUpdating) {
     var array = new Array(100).fill(0).map(()=>new Array(100).fill(0));
+    this.chart = ChartForUpdating
+    console.log(this.chart.data.labels)
     this.points = array;
     this.current_row = new Array(100).fill(0);
   }
@@ -18,8 +20,54 @@ class Graphic {
         xValues[i] = i;
         yValues[i] = this.current_row[i];
     }
+    removeData(this.chart);
+    addData(this.chart, xValues, yValues);
+  }
+}
 
-    new Chart("myChart", {
+
+function addData(chart, label, data) {
+  console.log(chart.data.labels)
+  for (let i = 0; i < 100; i++){
+    chart.data.labels.push(label[i]);
+  }
+  chart.data.datasets.forEach((dataset) => {
+    for (let i = 0; i < 100; i++){
+        dataset.data.push(data[i]);
+    }
+  });
+  chart.update();
+}
+
+
+function removeData(chart) {
+  console.log(chart.data.labels)
+  for (let i = 0; i < 100; i++){
+    chart.data.labels.pop();
+  }
+  console.log(chart.data.labels)
+  chart.data.datasets.forEach((dataset) => {
+        for (let i = 0; i < 100; i++){
+          dataset.data.pop();
+        }
+  });
+  chart.update();
+}
+
+
+const numberButtons = document.querySelectorAll("[data-number]");
+
+var xValues = new Array(100);
+var yValues = new Array(100);
+for (let i = 0; i < 100; i++){
+    xValues[i] = i;
+}
+
+for (let i = 0; i < 100; i++){
+    yValues[i] = Math.random();
+}
+
+const myChart = new Chart("myChart", {
     type: "line",
     data: {
        labels: xValues,
@@ -33,11 +81,9 @@ class Graphic {
             legend: {display: false}
         }
         });
-    }
-}
 
-const numberButtons = document.querySelectorAll("[data-number]");
-const graphic = new Graphic();
+console.log(myChart.data.labels);
+const graphic = new Graphic(myChart);
 
 for (let i = 0; i < 100; i++){
     for (let j = 0; j < 100; j++){
