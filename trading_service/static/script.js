@@ -4,13 +4,7 @@ class Graphic {
     this.chart = ChartForUpdating
     console.log(this.chart.data.labels)
     this.points = array;
-    this.current_row = new Array(100).fill(0);
-  }
-
-  change_row(row_num) {
-    for (let i = 0; i < 100; i++){
-        this.current_row[i] = this.points[row_num-1][i];
-    }
+    this.current_row = 0;
   }
 
   set_graphic() {
@@ -18,10 +12,19 @@ class Graphic {
     var yValues = new Array(100);
     for (let i = 0; i < 100; i++){
         xValues[i] = i;
-        yValues[i] = this.current_row[i];
+        yValues[i] = this.points[this.current_row][i];
     }
     removeData(this.chart);
     addData(this.chart, xValues, yValues);
+  }
+
+  update_data(yValues) {
+    console.log(yValues)
+    var index = yValues[0];
+    for (let i=0; i<100; i++){
+        this.points[i][index] = yValues[i+1];
+    }
+    this.set_graphic();
   }
 }
 
@@ -57,44 +60,41 @@ function removeData(chart) {
 
 const numberButtons = document.querySelectorAll("[data-number]");
 
+var socket = new WebSocket('ws://localhost:8000/ws/some_url/');
+
 var xValues = new Array(100);
 var yValues = new Array(100);
 for (let i = 0; i < 100; i++){
     xValues[i] = i;
+    yValues[i] = 0;
 }
 
-for (let i = 0; i < 100; i++){
-    yValues[i] = Math.random();
-}
-
-const myChart = new Chart("myChart", {
+const ctx = document.getElementById('myChart');
+const myChart = new Chart(ctx, {
     type: "line",
     data: {
        labels: xValues,
        datasets: [{
        data: yValues,
        borderColor: "red",
-       fill: false
-            }]
-        },
-        options: {
-            legend: {display: false}
-        }
-        });
+       fill: false }]
+       },
+       options: { legend: {display: false} }
+       });
 
-console.log(myChart.data.labels);
 const graphic = new Graphic(myChart);
 
-for (let i = 0; i < 100; i++){
-    for (let j = 0; j < 100; j++){
-    graphic.points[i][j] = Math.random();
+socket.onmessage = function(event){
+    var data = JSON.parse(event.data);
+    console.log(data);
+    graphic.update_data(data.message);
     }
-}
 
 numberButtons.forEach(button =>
 button.addEventListener(
 'click', () => {
-    graphic.change_row(Number(button.innerText));
+    document.getElementById('current').innerText = button.innerText;
+    graphic.current_row = Number(button.innerText);
     graphic.set_graphic();
   })
 );

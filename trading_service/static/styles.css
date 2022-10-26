@@ -1,21 +1,21 @@
 .menu li{
-    list-style: none;
-    position: relative;
+    list-style:none;
+    position:relative;
     }
 .menu_list{
-    display: flex;
+    display:flex;
     }
 .menu_list>li{
     margin: 0px 10px 0px 0px;
     }
 .menu_list>li:hover .sub_menu_list{
-    display: block;
+    display:block;
 }
 .sub_menu_list{
     display:none;
     position:absolute;
     left:0;
     top:20px;
-    background-color: #fff;
+    background-color:#fff;
     padding: 1px 1px 1px 1px;
-    }
+}

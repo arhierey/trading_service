@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>MyTitle</title>
-    <link href="styles.css" rel="stylesheet">
-    <script src="script.js" defer></script>
+    <link href="{% static 'styles.css' %}" rel="stylesheet">
+    <script src="{% static 'script.js' %}" defer></script>
 </head>
 <body>
+    <h1 id="current"></h1>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-    <canvas id="myChart" width="802" height="300" style="display: block; width: 802px; height: 338px;"></canvas>
+    <div class="plot"><canvas id="myChart" width="900" height="400"></canvas></div>
     <nav class="menu">
         <ul class="menu_list">
             <li>
